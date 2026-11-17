@@ -252,7 +252,7 @@ input[type=range]::-moz-range-thumb{width:46px;height:46px;border-radius:50%;bac
 .people .after em{color:var(--pink)}
 
 /* ---------- voice ---------- */
-.voice{padding:14vh 4vw;transition:background .5s,color .5s;overflow:hidden;min-height:100vh}
+.voice{padding:12vh 4vw;transition:background .5s,color .5s;overflow:hidden;min-height:100vh}
 .toggle{display:inline-flex;align-items:center;gap:16px;font:700 12px var(--mono);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6vh;user-select:none}
 .sw{width:84px;height:40px;border:2px solid currentColor;border-radius:999px;position:relative}
 .sw::after{content:"";position:absolute;top:4px;left:46px;width:28px;height:28px;border-radius:50%;background:currentColor;transition:left .3s cubic-bezier(.5,1.8,.5,1)}
@@ -274,13 +274,16 @@ input[type=range]::-moz-range-thumb{width:46px;height:46px;border-radius:50%;bac
 .voice.boring{background:#F4EDE1;color:#5b4a3a}
 .voice.boring .v-monster{display:none}
 .voice.boring .v-boring{display:block}
-.v-boring{font-family:Georgia,'Times New Roman',serif;max-width:900px;margin:0 auto;text-align:center;padding:4vh 0}
-.v-boring .paws{font-size:42px;letter-spacing:12px;margin-bottom:24px}
-.v-boring h2{font:400 clamp(34px,4vw,62px)/1.15 Georgia,serif;color:#7a5c44}
-.v-boring p{font:400 19px/1.7 Georgia,serif;margin:22px auto 34px;max-width:56ch;color:#8a735f}
+.v-boring{font-family:Georgia,'Times New Roman',serif;max-width:900px;margin:0 auto;text-align:center;padding:0}
+.v-boring .paws{font-size:28px;letter-spacing:10px;margin-bottom:14px}
+.v-boring h2{font:400 clamp(28px,3vw,48px)/1.15 Georgia,serif;color:#7a5c44}
+.v-boring p{font:400 17px/1.6 Georgia,serif;margin:14px auto 22px;max-width:56ch;color:#8a735f}
 .v-boring .btn{display:inline-block;background:#c9a98a;color:#fff;border-radius:40px;padding:16px 38px;font:400 17px Georgia,serif}
-.v-boring .smile{width:220px;height:220px;border-radius:50%;margin:0 auto 32px;background:radial-gradient(circle at 50% 40%,#f7d9a8,#e8bb7d);display:grid;place-items:center;font-size:110px}
-.v-boring .yawn{margin-top:40px;font:400 13px/1.5 Georgia,serif;font-style:italic;opacity:.6}
+.v-boring .smile{width:120px;height:120px;border-radius:50%;margin:0 auto 16px;background:radial-gradient(circle at 50% 40%,#f7d9a8,#e8bb7d);display:grid;place-items:center;font-size:62px}
+.v-boring .yawn{margin-top:30px;font:400 15px/1.5 Georgia,serif;font-style:italic;opacity:.7}
+.v-boring .wake{margin-top:18px;background:var(--ink);color:var(--lime);border:none;font:900 18px var(--wide);padding:18px 28px;text-transform:uppercase;letter-spacing:-.01em;box-shadow:6px 6px 0 var(--pink);animation:nudge 2.2s ease-in-out infinite}
+.v-boring .wake:hover{animation:shake .35s infinite}
+@keyframes nudge{0%,80%,100%{transform:rotate(0)}85%{transform:rotate(-3deg)}90%{transform:rotate(3deg)}95%{transform:rotate(-2deg)}}
 
 /* ---------- campaign ---------- */
 .campaign{height:100vh;overflow:hidden;position:relative;background:var(--ink)}
@@ -577,7 +580,8 @@ form.sign .ok{font:900 22px var(--wide);display:none}
     <h2>Heilbrigð og jafnvæg næring fyrir hamingjusaman hund.</h2>
     <p>Ríkt af vítamínum og steinefnum. Hágæða hráefni sem styðja við heilbrigðan feld, sterkar tennur og almenna vellíðan. Fyrir hunda á öllum aldri.</p>
     <span class="btn">Lesa meira</span>
-    <div class="yawn">…sjáðu? Þú varst búin/n að gleyma þessu áður en þú kláraðir setninguna. Ýttu aftur á takkann.</div>
+    <div class="yawn">Kannastu við þetta? Svona hljómar nánast allt hundafóður.</div>
+    <button class="wake" id="vwake" data-cursor="VEKJA">Vektu skrímslið ⚡</button>
   </div>
 </section>
 
@@ -823,8 +827,14 @@ sp.addEventListener('pointerup',()=>dragging=false);
 if(hasGsap){const o={p:50};ScrollTrigger.create({trigger:sp,start:'top 70%',once:true,onEnter:()=>{gsap.timeline().to(o,{p:72,duration:.8,ease:'power2.inOut',onUpdate:()=>{sB.style.clipPath=`inset(0 0 0 ${o.p}%)`;hd.style.left=o.p+'%'}}).to(o,{p:28,duration:1,ease:'power2.inOut',onUpdate:()=>{sB.style.clipPath=`inset(0 0 0 ${o.p}%)`;hd.style.left=o.p+'%'}}).to(o,{p:50,duration:.8,ease:'power2.inOut',onUpdate:()=>{sB.style.clipPath=`inset(0 0 0 ${o.p}%)`;hd.style.left=o.p+'%'}})}})}
 
 /* ---------- voice ---------- */
-const vs=$('#rodd');vs.classList.remove('boring');
-$('#vtoggle').addEventListener('click',()=>{vs.classList.toggle('boring');if(!vs.classList.contains('boring')){vs.classList.remove('shake');void vs.offsetWidth;vs.classList.add('shake')}});
+const vs=$('#rodd');vs.classList.add('boring');
+function toggleVoice(){vs.classList.toggle('boring');if(!vs.classList.contains('boring')){vs.classList.remove('shake');void vs.offsetWidth;vs.classList.add('shake');
+  if(hasGsap){gsap.fromTo('.v-monster h2',{scale:1.25,opacity:0,rotate:-3},{scale:1,opacity:1,rotate:0,duration:.7,ease:'back.out(2)'});
+    gsap.fromTo('.stk',{y:-300,opacity:0},{y:0,opacity:1,duration:.8,ease:'bounce.out',stagger:.07,delay:.2});
+    gsap.fromTo('.machine',{y:60,opacity:0},{y:0,opacity:1,duration:.7,ease:'expo.out',delay:.15});
+    ScrollTrigger.refresh()}
+  const top=vs.getBoundingClientRect().top+scrollY;window.scrollTo({top,behavior:'smooth'})}}
+$('#vtoggle').addEventListener('click',toggleVoice);$('#vwake').addEventListener('click',toggleVoice);
 const lines=['Taumurinn er bara tillaga.','Drulla er bara krydd.','Hann borðaði sófann. Gefðu honum eitthvað betra.','Göngutúr? Nei. Leiðangur.','Rigning er ekki afsökun. Ekki fyrir hann.','Fyrir hunda sem halda að 06:00 sé fínn tími.','Enginn hundur hefur sagt „ég er orðinn þreyttur“.','Næringarríkt. Skrímslasamþykkt.','Fóður fyrir hunda sem vita ekki hvað „rólegur“ þýðir.','Hann er ekki óþekkur. Hann er svangur.','Já, hann vill fara aftur út.','Gott fóður. Slæm áhrif.','Þú átt ekki hund. Hundurinn á þig.'];
 let li=0,mc=1;const mout=$('#mout');
 $('#mbtn').addEventListener('click',()=>{li=(li+1+Math.floor(Math.random()*(lines.length-1)))%lines.length;const target=lines[li];mc++;$('#mcount').textContent='#'+String(mc).padStart(3,'0');
